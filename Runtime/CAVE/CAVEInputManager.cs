@@ -88,7 +88,7 @@ namespace MMUCAVE
         private void InteractWithTouchables(RaycastHit hit)
         {
             // Check if the object has a Touchable component.
-            Touchable touchable = hit.collider.GetComponent<Touchable>();
+            InteractionObject touchable = hit.collider.GetComponent<InteractionObject>();
             if (touchable)
             {
                 touchable.OnTouch(); // Call the OnTouch method on the Touchable component

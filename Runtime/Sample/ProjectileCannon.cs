@@ -1,11 +1,12 @@
 using System.Collections;
+using MMUCAVE;
 using UnityEngine;
 
-public class ProjectileCannon : MonoBehaviour
+public class ProjectileCannon : InteractionObject
 {
     [Header("References")]
 
-    [Tooltip("The spawn point tranform")]
+    [Tooltip("The spawn point transform")]
     [SerializeField] private Transform spawnPoint;
 
     [Tooltip("The prefab to fire from the spawnPoint")]
@@ -26,7 +27,7 @@ public class ProjectileCannon : MonoBehaviour
     [SerializeField] private float cooldownTimer = 0.1f;
     
     private bool isRateLimited = false;
-    public void Fire()
+    public override void OnTouch()
     {
         // Error handling
         if (spawnPoint == null)
