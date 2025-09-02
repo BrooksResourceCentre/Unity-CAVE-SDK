@@ -3,8 +3,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
+using MMUCAVE;
 
-public class TeleportationHotspot : MonoBehaviour
+public class TeleportationHotspot : InteractionObject
 {
     [Tooltip("The GameObject to teleport")]
     [SerializeField] private GameObject objectToTeleport;
@@ -40,18 +41,18 @@ public class TeleportationHotspot : MonoBehaviour
         //_ = SwitchCanvasCameraTouchIntercept();
     }
 
-    void Update()
+    /*void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
             lastTouchPosition = Input.mousePosition;
             StartCoroutine(SwitchCameraAndSimulateTouch(lastTouchPosition));
         }
-    }
+    }*/
 
 
 
-    public void Teleport()
+    public override void OnTouch()
     {
         if (objectToTeleport == null)
         {
