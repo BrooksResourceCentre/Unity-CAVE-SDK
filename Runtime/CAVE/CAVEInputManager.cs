@@ -15,8 +15,14 @@ namespace MMUCAVE
         [Header("References")] [Tooltip("Reference to the cameras in the CAVE")] [SerializeField]
         private Camera[] cameras; //All cameras
 
-        [Tooltip("Offset to move the CAVE to after the hit point")] [SerializeField]
-        private Vector3 teleportOffset = new(0, 1.425f, 0); // Offset when moving the CAVE to the hit point
+        [Tooltip("The touch actions available to perform")]
+        private int keybindsPressedCounter = 0;
+
+
+        [SerializeField] private float rotationSpeed = 100f; // Speed of rotation
+
+        [Tooltip("Tooltip panel for keybind popups.")] [SerializeField]
+        private GameObject keybindPanel;
 
         [Tooltip("The speed at which the CAVE will rotate when swiping")][SerializeField] private float rotationSpeed = 100f; // Speed of rotation
      
@@ -82,7 +88,7 @@ namespace MMUCAVE
 
         private void MoveCaveToClickPosition(RaycastHit hit)
         {
-            cave.transform.position = hit.point + teleportOffset; // Move the CAVE to the hit point
+            cave.transform.position = hit.point; // Move the CAVE to the hit point
         }
 
         private void InteractWithTouchables(RaycastHit hit)

@@ -25,6 +25,7 @@ public class TeleportationHotspot : InteractionObject
 
         CAVE.transform.position = transform.position;
         CAVE.transform.rotation = Quaternion.Euler(rotationOffset);
+
     }
 
 }
