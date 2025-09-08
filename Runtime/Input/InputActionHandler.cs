@@ -26,12 +26,13 @@ namespace MMUCAVE
         [Tooltip("The percentage of similarity a swipe must have to register a cardinal direction")][SerializeField]
         private float directionThreshold = .9f;
         [Tooltip("The minimum time that must pass before a tap becomes a hold")][SerializeField]
-        private float tapTimeThreshold = 0.01f;
+        private float tapTimeThreshold = 0.6f;
 
         private Vector2[] _lastPositions = new Vector2[maxInputCount];// Stores the position of the touch at last coroutine pass
         private Vector2[]_directions = new Vector2[maxInputCount];// Stores the direction of each touch if it is a swipe
         private float[] _startTimes = new float[maxInputCount];// Stores the time each touch was started
         private Coroutine[] _coroutines = new Coroutine[maxInputCount];// Holds references to the TouchUpdate coroutines
+        private bool[] didSwipe = new bool[maxInputCount]; // Used to note difference between hold and swipe inputs
 
         private void OnEnable()
         {
@@ -61,16 +62,23 @@ namespace MMUCAVE
         {
             // Clears all data for the unneeded touch
             StopCoroutine(_coroutines[finger.index]);// Stops checking for input changes
-            if (Mathf.Abs(_startTimes[finger.index] - Time.time) < tapTimeThreshold)// Compare start and current time
+            
+            if (!didSwipe[finger.index])// Checks if a swipe was already performed.
             {
-                // If the time passed is less than what is required for a hold then respond to a tap
-                caveInputManager.HandleTouchActions(finger.currentTouch.screenPosition, CAVEUtilities.TouchTypes.Touchables);
+                if (Mathf.Abs(_startTimes[finger.index] - Time.time) <
+                    tapTimeThreshold) // Compare start and current time
+                {
+                    // If the time passed is less than what is required for a hold then respond to a tap
+                    caveInputManager.HandleTouchActions(finger.currentTouch.screenPosition,
+                        CAVEUtilities.TouchTypes.Touchables);
+                }
+                else
+                {
+                    caveInputManager.HandleHoldActions(finger.currentTouch.screenPosition);
+                }
             }
-            else
-            {
-                // If the time passed is more than what is required for a hold then respond to a hold
-                return;
-            }
+            
+            didSwipe[finger.index] = false; // Reset value for next touch
         }
         
          #region Swipe Detection
@@ -88,32 +96,34 @@ namespace MMUCAVE
 
         private void DetectSwipe(Finger finger)
         {
-            // Touch is a swipe if it has moved at least the minimum distance since the last pass.
+            // Touch is a swipe if it has moved at least the minimum distance since the last pass
             if (Vector2.Distance(_lastPositions[finger.index], finger.currentTouch.screenPosition) >= minimumDistance)
             {
+                didSwipe[finger.index] = true;
                 _directions[finger.index] = (finger.currentTouch.screenPosition - _lastPositions[finger.index]).normalized;
                 // vv THE INTERACTION A SWIPE CORRESPONDS TO vv
-                SwipeDirection(_directions[finger.index]);
+                SwipeDirection(_directions[finger.index],finger.currentTouch.screenPosition);
                 // In this example it rotates the view
             }
-            else{
+            else if (Mathf.Abs(_startTimes[finger.index] - Time.time) > tapTimeThreshold)// Compare start and current time
+            {   
                 // vv THE INTERACTION A NON-SWIPE CORRESPONDS TO vv
-                caveInputManager.HandleTouchActions(finger.currentTouch.screenPosition, CAVEUtilities.TouchTypes.Touchables);
-                // In this example it activates any touchables tapped
+                // If the time passed is more than what is required for a hold then respond to a hold
+                caveInputManager.HandleHoldActions(finger.currentTouch.screenPosition);
             }
         }
 
-        private void SwipeDirection(Vector2 direction)
+        private void SwipeDirection(Vector2 direction, Vector2 position)
         {
             // Uses the dot product to determine how similar the touch direction is to each cardinal direction.
             if (Vector2.Dot(Vector2.right, direction) > directionThreshold)
             {
-                caveInputManager.RotateCAVE(Vector3.down);// If swiped right, rotate right
+                caveInputManager.HandleSwipeActions(position,Vector3.down);// If swiped right, rotate right
             }
 
             if (Vector2.Dot(Vector2.left, direction) > directionThreshold)
             {
-                caveInputManager.RotateCAVE(Vector3.up);// If swiped left, rotate left
+                caveInputManager.HandleSwipeActions(position,Vector3.up);// If swiped left, rotate left
             }
         }
 

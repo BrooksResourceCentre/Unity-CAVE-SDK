@@ -22,15 +22,30 @@ namespace MMUCAVE
 
 
         #region Swipe Input
+
         /// <summary>
         /// Rotates the CAVE view in the direction specified.<br><ul> (Up = Left, Down = Right) </ul></br>
         /// </summary>
-        /// <param name="direction"></param>
-        public void RotateCAVE(Vector3 direction)
+        /// <param name="position"></param>
+        /// <param name="direction"></param
+        public void HandleSwipeActions(Vector2 position, Vector3 direction)
         {
-            cave.transform.Rotate(direction, rotationSpeed); // Rotate view
+            RaycastHit raycastHit = CAVEUtilities.RaycastFromScreenPosition(position, cameras);
+            if (!raycastHit.collider)
+            {
+                return; // If there is no object, return nothing
+            }
+            // Get a reference to the raycast hit object if it inherits from the InteractionObject class
+            InteractionObject touchable = raycastHit.collider.GetComponent<InteractionObject>();
+            if (touchable)
+            {
+                touchable.OnSwipe(direction); // Call the OnSwipe method on the Touchable component
+            }
+            else
+            {
+                cave.transform.Rotate(direction, rotationSpeed); // if no touchable object was hit, Rotate view
+            }
         }
-        
 
         #endregion
         
@@ -62,7 +77,11 @@ namespace MMUCAVE
                     break; //Spawn random object at touch coordinates, temporary for demonstration.
 
                 case CAVEUtilities.TouchTypes.Touchables:
-                    InteractWithTouchables(raycastHit);
+                    InteractionObject touchable = raycastHit.collider.GetComponent<InteractionObject>();
+                    if (touchable)
+                    {
+                        touchable.OnTouch(); // Call the OnTouch method on the Touchable component
+                    }
                     break; //Prompt a function on any object that contains the touchable class.
 
                 case CAVEUtilities.TouchTypes.ShootProjectile:
@@ -74,20 +93,29 @@ namespace MMUCAVE
                     break; //Logs an error if a correct touch type is not given
             }
         }
+        
+        public void HandleHoldActions(Vector2 position)
+        {
+            RaycastHit raycastHit = CAVEUtilities.RaycastFromScreenPosition(position, cameras);
+            if (!raycastHit.collider)
+            {
+                return; // If there is no object, return nothing
+            }
+            // Get a reference to the raycast hit object if it inherits from the InteractionObject class
+            InteractionObject touchable = raycastHit.collider.GetComponent<InteractionObject>();
+            if (touchable)
+            {
+                touchable.OnHold(); // Call the OnSwipe method on the touchable component
+            }
+            else
+            {
+                return; // if no touchable object was hit, return
+            }
+        }
 
         private void MoveCaveToClickPosition(RaycastHit hit)
         {
             cave.transform.position = hit.point; // Move the CAVE to the hit point
-        }
-
-        private void InteractWithTouchables(RaycastHit hit)
-        {
-            // Check if the object has a Touchable component.
-            InteractionObject touchable = hit.collider.GetComponent<InteractionObject>();
-            if (touchable)
-            {
-                touchable.OnTouch(); // Call the OnTouch method on the Touchable component
-            }
         }
 
 		#region Demo behaviour
