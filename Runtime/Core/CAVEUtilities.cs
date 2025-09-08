@@ -8,7 +8,7 @@ public static class CAVEUtilities
     /// <summary>
     /// Defined ways the CAVE can respond to touch interactions.
     /// </summary>
-    public enum TouchTypes
+    public enum TapTypes
     {
         /// <summary> No action. </summary>
         None,
@@ -17,12 +17,27 @@ public static class CAVEUtilities
         /// <summary> Spawn a random object at the touch point. </summary>
         SpawnObject,
         /// <summary> Shoot a projectile from the CAVE toward the touch input position. </summary>
-        ShootProjectile,
-        /// <summary> Trigger Interactable Objects. </summary>
-        Touchables,
+        ShootProjectile
+    };
+
+    public enum HoldTypes
+    {
+        /// <summary> No action. </summary>
+        None,
+        /// <summary> Teleport the CAVE to the touch point. </summary>
+        Teleport,
+        /// <summary> Spawn a random object at the touch point. </summary>
+        SpawnObject,
+        /// <summary> Shoot a projectile from the CAVE toward the touch input position. </summary>
+        ShootProjectile
+    }
+    public enum SwipeTypes
+    {
+        /// <summary> No action. </summary>
+        None,
         /// <summary> Drag along CAVE walls to rotate the camera view. </summary>
         Look
-    };
+    }
 
     /// <summary>
     /// Get the camera that contains the mouse position,

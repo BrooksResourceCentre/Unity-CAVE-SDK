@@ -69,8 +69,7 @@ namespace MMUCAVE
                     tapTimeThreshold) // Compare start and current time
                 {
                     // If the time passed is less than what is required for a hold then respond to a tap
-                    caveInputManager.HandleTouchActions(finger.currentTouch.screenPosition,
-                        CAVEUtilities.TouchTypes.Touchables);
+                    caveInputManager.HandleTapActions(finger.currentTouch.screenPosition);
                 }
                 else
                 {
