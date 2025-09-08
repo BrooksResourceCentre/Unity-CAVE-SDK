@@ -24,24 +24,16 @@ public class VideoController : MonoBehaviour
     private GameObject buttonPlayOrPause;
 
     [SerializeField]
+    [Tooltip("Play/Pause Button TMP Text")]
+    private TMP_Text textPlayOrPause;
+
+    [SerializeField]
     [Tooltip("Slider that controls the video")]
     private Slider slider;
 
     [SerializeField]
     [Tooltip("Slider text")]
     private TMP_Text sliderText;
-
-    [SerializeField]
-    [Tooltip("Play icon sprite")]
-    private Sprite iconPlay;
-
-    [SerializeField]
-    [Tooltip("Pause icon sprite")]
-    private Sprite iconPause;
-
-    [SerializeField]
-    [Tooltip("Play or pause button image.")]
-    private Image buttonPlayOrPauseIcon;
 
     [SerializeField]
     [Tooltip("If checked, the slider will fade off after a few seconds. If unchecked, the slider will remain on.")]
@@ -146,7 +138,7 @@ public class VideoController : MonoBehaviour
         {
             Debug.LogWarning("VideoController: Not enough video clips to select this index");
             return;
-        }
+       }
 
         videoPlayer.clip = dropdownVideoClips[currentDropdownIndex];
 
@@ -203,7 +195,7 @@ public class VideoController : MonoBehaviour
     {
         videoIsPlaying = false;
         videoPlayer.Pause();
-        buttonPlayOrPauseIcon.sprite = iconPlay;
+        textPlayOrPause.text = "Play";
         onVideoStop?.Invoke();
     }
 
@@ -211,7 +203,7 @@ public class VideoController : MonoBehaviour
     {
         videoIsPlaying = true;
         videoPlayer.Play();
-        buttonPlayOrPauseIcon.sprite = iconPause;
+        textPlayOrPause.text = "Pause";
         onVideoPlay?.Invoke();
     }
 
