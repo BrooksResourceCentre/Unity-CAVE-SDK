@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
 namespace MMUCAVE
@@ -37,6 +39,27 @@ namespace MMUCAVE
         [SerializeField]
         private bool handleInteractionObjects = true;
 
+        /// <summary>
+        /// An event called whenever the CAVE is swiped, and it does not intercept an Interaction Object.
+        /// </summary>
+        public UnityEvent<Vector2, Vector2> onCaveSwiped;
+        /// <summary>
+        /// An event called whenever the CAVE is tapped, and it does not intercept an Interaction Object.
+        /// </summary>
+        public UnityEvent<Vector2> onCaveTapped;
+        /// <summary>
+        /// An event called whenever the CAVE is held, and it does not intercept an Interaction Object.
+        /// </summary>
+        public UnityEvent<Vector2> onCaveHeld;
+
+        private void Awake()
+        {
+            // Declaring the events if they are null
+            onCaveSwiped ??= new UnityEvent<Vector2, Vector2>();
+            onCaveTapped ??= new UnityEvent<Vector2>();
+            onCaveHeld ??= new UnityEvent<Vector2>();
+        }
+
     #region Swipe Input
 
         /// <summary>
@@ -66,6 +89,10 @@ namespace MMUCAVE
                             rotationSpeed); // Rotates the CAVE view in the direction specified
 
                         break;
+                    case CAVEUtilities.SwipeTypes.CallEvent:
+                        onCaveSwiped?.Invoke(position, direction);
+
+                        break; //Call a Unity Event
                     default:
                         Debug.LogWarning("No action selected or action not implemented.");
 
@@ -110,7 +137,10 @@ namespace MMUCAVE
                         InstantiateRandomPrimitiveAtHitPosition(raycastHit);
 
                         break; //Spawn random object at touch coordinates, only for demonstration.
-                    
+                    case CAVEUtilities.TouchTypes.CallEvent:
+                        onCaveTapped?.Invoke(position);
+                        
+                        break; //Call a Unity Event
                     default:
                         Debug.LogWarning("No action selected or action not implemented.");
 
@@ -150,7 +180,10 @@ namespace MMUCAVE
                         InstantiateRandomPrimitiveAtHitPosition(raycastHit);
 
                         break; //Spawn random object at touch coordinates, only for demonstration.
-                    
+                    case CAVEUtilities.TouchTypes.CallEvent:
+                        onCaveHeld?.Invoke(position);
+                        
+                        break; //Call a Unity Event
                     default:
                         Debug.LogWarning("No action selected or action not implemented.");
 

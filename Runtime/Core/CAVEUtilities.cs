@@ -11,7 +11,10 @@ public static class CAVEUtilities
         None,
 
         /// <summary> Drag along CAVE walls to rotate the camera view. </summary>
-        Look
+        Look,
+        
+        /// <summary> Call a Unity Event. </summary>
+        CallEvent
     }
 
     /// <summary>
@@ -26,8 +29,10 @@ public static class CAVEUtilities
         Teleport,
 
         /// <summary> Spawn a random object at the touch point. </summary>
-        SpawnObject
-
+        SpawnObject,
+        
+        /// <summary> Call a Unity Event. </summary>
+        CallEvent
     }
 
     /// <summary>
