@@ -42,23 +42,15 @@ namespace MMUCAVE
         /// <summary>
         /// An event called whenever the CAVE is swiped, and it does not intercept an Interaction Object.
         /// </summary>
-        public UnityEvent<Vector2, Vector2> onCaveSwiped;
+        public static event Action<Vector2, Vector2> onCaveSwiped;
         /// <summary>
         /// An event called whenever the CAVE is tapped, and it does not intercept an Interaction Object.
         /// </summary>
-        public UnityEvent<Vector2> onCaveTapped;
+        public static event Action<Vector2> onCaveTapped;
         /// <summary>
         /// An event called whenever the CAVE is held, and it does not intercept an Interaction Object.
         /// </summary>
-        public UnityEvent<Vector2> onCaveHeld;
-
-        private void Awake()
-        {
-            // Declaring the events if they are null
-            onCaveSwiped ??= new UnityEvent<Vector2, Vector2>();
-            onCaveTapped ??= new UnityEvent<Vector2>();
-            onCaveHeld ??= new UnityEvent<Vector2>();
-        }
+        public static event Action<Vector2> onCaveHeld;
 
     #region Swipe Input
 
