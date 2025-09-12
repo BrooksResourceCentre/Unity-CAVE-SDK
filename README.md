@@ -7,7 +7,7 @@ This project is specifically configured for the [Manchester Metropolitan Univers
 
 1. Download this repository, extract the contents, and within Unity's Package Manager add "install package from disk".
 2. Include the "CAVE_Core" prefab in your scene or create a variation for your specifics of your bespoke CAVE setup.
-3. 
+   
 If using multiple displays,
 1. Go to Project Settings > Player > Resolution and Presentation.
 2. Set the Fullscreen Mode to "Fullscreen Window".
