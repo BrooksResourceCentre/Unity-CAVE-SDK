@@ -42,15 +42,15 @@ namespace MMUCAVE
         /// <summary>
         /// An event called whenever the CAVE is swiped, and it does not intercept an Interaction Object.
         /// </summary>
-        public static event Action<Vector2, Vector2> onCaveSwiped;
+        public static event Action<Vector2, Vector2> OnCaveSwiped;
         /// <summary>
         /// An event called whenever the CAVE is tapped, and it does not intercept an Interaction Object.
         /// </summary>
-        public static event Action<Vector2> onCaveTapped;
+        public static event Action<Vector2> OnCaveTapped;
         /// <summary>
         /// An event called whenever the CAVE is held, and it does not intercept an Interaction Object.
         /// </summary>
-        public static event Action<Vector2> onCaveHeld;
+        public static event Action<Vector2> OnCaveHeld;
 
     #region Swipe Input
 
@@ -82,7 +82,7 @@ namespace MMUCAVE
 
                         break;
                     case CAVEUtilities.SwipeTypes.CallEvent:
-                        onCaveSwiped?.Invoke(position, direction);
+                        OnCaveSwiped?.Invoke(position, direction);
 
                         break; //Call a Unity Event
                     default:
@@ -130,7 +130,7 @@ namespace MMUCAVE
 
                         break; //Spawn random object at touch coordinates, only for demonstration.
                     case CAVEUtilities.TouchTypes.CallEvent:
-                        onCaveTapped?.Invoke(position);
+                        OnCaveTapped?.Invoke(position);
                         
                         break; //Call a Unity Event
                     default:
@@ -173,7 +173,7 @@ namespace MMUCAVE
 
                         break; //Spawn random object at touch coordinates, only for demonstration.
                     case CAVEUtilities.TouchTypes.CallEvent:
-                        onCaveHeld?.Invoke(position);
+                        OnCaveHeld?.Invoke(position);
                         
                         break; //Call a Unity Event
                     default:
