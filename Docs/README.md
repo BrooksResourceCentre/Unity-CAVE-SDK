@@ -1,6 +1,6 @@
 # Unity CAVE SDK
 ## Overview
-This [Unity](https://unity.com/) package aims to provide easy to use functionality within for customisable configurations [CAVE (Cave automatic virtual environment)](https://en.wikipedia.org/wiki/Cave_automatic_virtual_environment) spaces, with appropriate camera projection, touch interaction abilities and extension features such as supporting the Microsoft Kinect.
+This [Unity](https://unity.com/) package aims to provide easy to use functionality for customisable configurations within [CAVE (Cave automatic virtual environment)](https://en.wikipedia.org/wiki/Cave_automatic_virtual_environment) spaces, with appropriate camera projection, touch interaction capabilities and extension features such as supporting the Microsoft Kinect.
 
 This project is specifically configured for the [Manchester Metropolitan University](https://www.mmu.ac.uk/) Brooks Building CAVE (BR0.89). That CAVE is a 5m by 5m floorspace with ~2.8125m high walls, running on three walls and the floor, and supports multiple concurrent touch input.
 
@@ -12,7 +12,7 @@ This project is specifically configured for the [Manchester Metropolitan Univers
 </p>
 
 ## The CAVE Challenge
-Camera projection within a CAVE space has unique challenges due to **image wapring effects** where content is stretched at wall edges. This is due to how virtual cameras typically render 3D scnenes in computer graphics. The image below is a [View Frustum](https://en.wikipedia.org/wiki/Viewing_frustum) and in simplified terms, everything behind the yellow 'Near' plane (from the cameras perspective) is what gets displayed to screen. 
+Camera projection within a CAVE space has unique challenges due to **image warping effects** where content is stretched at wall edges. This is due to how virtual cameras typically render 3D scenes in computer graphics. The image below is a [View Frustum](https://en.wikipedia.org/wiki/Viewing_frustum) and in simplified terms, everything behind the yellow 'Near' plane (from the cameras perspective) is what gets displayed to screen. 
 
 <br/>
 <p align="center">
