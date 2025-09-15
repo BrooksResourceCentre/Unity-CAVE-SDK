@@ -36,19 +36,7 @@ namespace MMUCAVE
         [SerializeField]
         private float tapTimeThreshold = 0.6f;
 
-        private readonly Coroutine[]
-            _coroutines = new Coroutine[maxInputCount]; // Holds references to the TouchUpdate coroutines
-
-        private readonly Vector2[]
-            _directions = new Vector2[maxInputCount]; // Stores the direction of each touch if it is a swipe
-
-        private readonly Vector2[]
-            _lastPositions = new Vector2[maxInputCount]; // Stores the position of the touch at last coroutine pass
-
-        private readonly float[] _startTimes = new float[maxInputCount]; // Stores the time each touch was started
-
-        private readonly bool[]
-            didSwipe = new bool[maxInputCount]; // Used to note difference between hold and swipe inputs
+        private readonly TouchInstance[] touches = new TouchInstance[maxInputCount]; // Holds references to the TouchInstances
 
         private void OnEnable()
         {
@@ -67,21 +55,21 @@ namespace MMUCAVE
 
         private void FingerDown(Finger finger)
         {
-            // Stores all the needed data for the new touch in the relevant arrays
-            _lastPositions[finger.index] = finger.currentTouch.screenPosition;
-            _startTimes[finger.index] = Time.time;
-            _directions[finger.index] = Vector2.zero;
-            _coroutines[finger.index] = StartCoroutine(TouchUpdate(finger)); // Starts checking for changes to the input
+            touches[finger.index] = new TouchInstance(Vector2.zero,
+                finger.currentTouch.screenPosition, Time.time);
+            // Stores all the needed data for the new touch in a new TouchInstance
+            touches[finger.index].coroutine = StartCoroutine(TouchUpdate(finger));
+            //coroutine is assigned afterward to avoid starting a coroutine before other values are assigned
         }
 
         private void FingerUp(Finger finger)
         {
             // Clears all data for the unneeded touch
-            StopCoroutine(_coroutines[finger.index]); // Stops checking for input changes
+            StopCoroutine(touches[finger.index].coroutine); // Stops checking for input changes
 
-            if (!didSwipe[finger.index]) // Checks if a swipe was already performed.
+            if (!touches[finger.index].didSwipe) // Checks if a swipe was already performed.
             {
-                if (Mathf.Abs(_startTimes[finger.index] - Time.time) <
+                if (Mathf.Abs(touches[finger.index].startTime - Time.time) <
                     tapTimeThreshold) // Compare start and current time
                 {
                     // If the time passed is less than what is required for a hold then respond to a tap
@@ -92,8 +80,6 @@ namespace MMUCAVE
                     caveInteractionManager.HandleHoldActions(finger.currentTouch.screenPosition);
                 }
             }
-
-            didSwipe[finger.index] = false; // Reset value for next touch
         }
 
     #region Swipe Detection
@@ -102,10 +88,10 @@ namespace MMUCAVE
         {
             while (true)
             {
-                _directions[finger.index] = Vector2.zero; // Reset stored direction from last pass
+                touches[finger.index].direction = Vector2.zero; // Reset stored direction from last pass
                 DetectSwipe(finger);                      // Check for a swipe
 
-                _lastPositions[finger.index] =
+                touches[finger.index].lastPosition =
                     finger.currentTouch.screenPosition; // Update stored position for next pass
 
                 yield return new WaitForSeconds(inputUpdateWait); // Wait for the required time before next pass
@@ -115,18 +101,17 @@ namespace MMUCAVE
         private void DetectSwipe(Finger finger)
         {
             // Touch is a swipe if it has moved at least the minimum distance since the last pass
-            if (Vector2.Distance(_lastPositions[finger.index], finger.currentTouch.screenPosition) >= minimumDistance)
+            if (Vector2.Distance(touches[finger.index].lastPosition, finger.currentTouch.screenPosition) >= minimumDistance)
             {
-                didSwipe[finger.index] = true;
+                touches[finger.index].didSwipe = true;
 
-                _directions[finger.index] =
-                    (finger.currentTouch.screenPosition - _lastPositions[finger.index]).normalized;
+                touches[finger.index].direction = (finger.currentTouch.screenPosition - touches[finger.index].lastPosition).normalized;
 
                 // vv THE INTERACTION A SWIPE CORRESPONDS TO vv
-                SwipeDirection(_directions[finger.index], finger.currentTouch.screenPosition);
+                SwipeDirection(touches[finger.index].direction, finger.currentTouch.screenPosition);
                 // In this example it rotates the view
             }
-            else if (Mathf.Abs(_startTimes[finger.index] - Time.time) >
+            else if (Mathf.Abs(touches[finger.index].startTime - Time.time) >
                      tapTimeThreshold) // Compare start and current time
             {
                 // vv THE INTERACTION A NON-SWIPE CORRESPONDS TO vv
