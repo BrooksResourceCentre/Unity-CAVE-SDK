@@ -11,60 +11,52 @@ public class VideoController : MonoBehaviour
 {
     [Header("References")]
 
-    [SerializeField]
     [Tooltip("Dropdown to select video clips")]
+    [SerializeField]
     private TMP_Dropdown dropdown;
 
-    [SerializeField]
     [Tooltip("Video player component")]
+    [SerializeField]
     private VideoPlayer videoPlayer;
 
-    [SerializeField]
     [Tooltip("Play/Pause button GameObject")]
+    [SerializeField]
     private GameObject buttonPlayOrPause;
 
+    [Tooltip("Play/Pause Button TMP Text")]
     [SerializeField]
+    private TMP_Text textPlayOrPause;
+
     [Tooltip("Slider that controls the video")]
+    [SerializeField]
     private Slider slider;
 
-    [SerializeField]
     [Tooltip("Slider text")]
+    [SerializeField]
     private TMP_Text sliderText;
 
-    [SerializeField]
-    [Tooltip("Play icon sprite")]
-    private Sprite iconPlay;
-
-    [SerializeField]
-    [Tooltip("Pause icon sprite")]
-    private Sprite iconPause;
-
-    [SerializeField]
-    [Tooltip("Play or pause button image.")]
-    private Image buttonPlayOrPauseIcon;
-
-    [SerializeField]
     [Tooltip("If checked, the slider will fade off after a few seconds. If unchecked, the slider will remain on.")]
+    [SerializeField]
     private bool hideSliderAfterFewSeconds;
 
     [Header("Settings")]
-
-    [SerializeField]
+    
     [Tooltip("List of video clips for the dropdown")]
+    [SerializeField]
     private List<VideoClip> dropdownVideoClips;
 
     [Header("Events")]
 
-    [SerializeField]
     [Tooltip("Event triggered when the dropdown value changes")]
+    [SerializeField]
     private UnityEvent onDropdownChanged;
 
-    [SerializeField]
     [Tooltip("Event triggered when the video plays")]
+    [SerializeField]
     private UnityEvent onVideoPlay;
 
-    [SerializeField]
     [Tooltip("Event triggered when the video stops")]
+    [SerializeField]
     private UnityEvent onVideoStop;
 
     private int currentDropdownIndex = -1; // Init on an impossible index
@@ -81,6 +73,7 @@ public class VideoController : MonoBehaviour
         if (dropdownVideoClips == null) Debug.LogWarning(name + " dropdownVideoClips == null");
         if (onDropdownChanged == null) Debug.LogWarning(name + " onDropdownChanged == null");
 
+        // Sets up player to play correctly
         if (!videoPlayer.playOnAwake)
         {
             videoPlayer.playOnAwake = true; // Set play on awake for next enable.
@@ -123,6 +116,7 @@ public class VideoController : MonoBehaviour
             videoJumpPending = false;
         }
 
+        // Check whether the video is playing normally
         if (!isDragging && !videoJumpPending)
         {
             if (videoPlayer.clip.length > 0)
@@ -135,24 +129,31 @@ public class VideoController : MonoBehaviour
         }
     }
 
-    void UpdateVideoClip()
+    private void UpdateVideoClip()
     {
+        // Do nothing if user selects the same video
         if (currentDropdownIndex == dropdown.value)
             return;
 
         currentDropdownIndex = dropdown.value;
 
+        // Error handling
         if (dropdownVideoClips.Count - 1 < currentDropdownIndex)
         {
             Debug.LogWarning("VideoController: Not enough video clips to select this index");
             return;
         }
 
+        // Set the video to the selected clip
         videoPlayer.clip = dropdownVideoClips[currentDropdownIndex];
 
-        onDropdownChanged?.Invoke();
+        onDropdownChanged?.Invoke(); // Activate the function if it exists
     }
 
+    /// <summary>
+    ///     To be used as part of an interaction event.
+    ///     Enables the 'jumping' state of the slider, allowing the user to scrub the timeline.
+    /// </summary>
     public void OnPointerDown()
     {
         videoJumpPending = true;
@@ -160,6 +161,10 @@ public class VideoController : MonoBehaviour
         VideoJump();
     }
 
+    /// <summary>
+    ///     To be used as part of an interaction event, in conjunction with the OnPointerDown() function.
+    ///     Disables the 'jumping' state of the slider.
+    /// </summary>
     public void OnRelease()
     {
         isDragging = false;
@@ -167,19 +172,22 @@ public class VideoController : MonoBehaviour
         VideoJump();
     }
 
-    IEnumerator HideSliderAfterSeconds(float duration = 1f)
+    private IEnumerator HideSliderAfterSeconds(float duration = 1f)
     {
         yield return new WaitForSeconds(duration);
         slider.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    ///     To be used as part of an interaction event.
+    /// </summary>
     public void OnDrag()
     {
         isDragging = true;
         videoJumpPending = true;
     }
 
-    void VideoJump()
+    private void VideoJump()
     {
         videoJumpPending = true;
         var frame = videoPlayer.clip.length * slider.value;
@@ -187,6 +195,10 @@ public class VideoController : MonoBehaviour
         videoPlayer.time = (long)frame;
     }
 
+    /// <summary>
+    ///     To be used as part of an interaction event.
+    ///     Toggles the playback state of the video player.
+    /// </summary>
     public void PlayOrPauseVideo()
     {
         if (videoIsPlaying)
@@ -199,23 +211,29 @@ public class VideoController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///     To be used as part of an interaction event.
+    /// </summary>
     public void VideoStop()
     {
         videoIsPlaying = false;
         videoPlayer.Pause();
-        buttonPlayOrPauseIcon.sprite = iconPlay;
+        textPlayOrPause.text = "Play";
         onVideoStop?.Invoke();
     }
 
+    /// <summary>
+    ///     To be used as part of an interaction event.
+    /// </summary>
     public void VideoPlay()
     {
         videoIsPlaying = true;
         videoPlayer.Play();
-        buttonPlayOrPauseIcon.sprite = iconPause;
+        textPlayOrPause.text = "Pause";
         onVideoPlay?.Invoke();
     }
 
-    void UpdateSliderText()
+    private void UpdateSliderText()
     {
         // Convert the current time and clip length to TimeSpan objects.
         TimeSpan currentTimeSpan = TimeSpan.FromSeconds(videoPlayer.time);

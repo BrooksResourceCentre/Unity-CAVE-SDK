@@ -136,6 +136,7 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
+  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -143,7 +144,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
 --- !u!1 &1773861395621538885
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,6 +419,7 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
+  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -426,7 +427,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
 --- !u!1 &3297928678342108165
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,6 +564,7 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
+  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -571,7 +572,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
 --- !u!81 &1246112335644673700
 AudioListener:
   m_ObjectHideFlags: 0
@@ -716,6 +716,7 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
+  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -723,7 +724,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
 --- !u!1 &6733559121601784281
 GameObject:
   m_ObjectHideFlags: 0
@@ -872,6 +872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17ca1d296b9d97445b3447ad6feaf218, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displayIndex: 0
 --- !u!1 &8379951209906154221
 GameObject:
   m_ObjectHideFlags: 0
@@ -936,7 +937,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 6b624ff3add1bd94a87f2c79a32fa4ff, type: 3}
+  m_Actions: {fileID: -944628639613478452, guid: 6b624ff3add1bd94a87f2c79a32fa4ff,
+    type: 3}
   m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -964,7 +966,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: e4b89038-1f08-4999-a29b-4025dac21c7b
-    m_ActionName: 'Move+Rotate/Rotation[/Keyboard/q,/Keyboard/e]'
+    m_ActionName: Move+Rotate/Rotation[/Keyboard/q,/Keyboard/e]
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 46802612105210110}
@@ -980,7 +982,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
     m_ActionId: e3e1bb3e-1090-4401-a853-0f576f26c8b9
-    m_ActionName: 'Move+Rotate/VerticalMovement[/Keyboard/space,/Keyboard/shift]'
+    m_ActionName: Move+Rotate/VerticalMovement[/Keyboard/space,/Keyboard/shift]
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Cave Keyboard Control Scheme
   m_DefaultActionMap: Move+Rotate
@@ -1005,6 +1007,10 @@ MonoBehaviour:
   - {fileID: 2662164158013518493}
   rotationSpeed: 10
   cave: {fileID: 8379951209906154221}
+  tapType: 1
+  holdType: 2
+  swipeType: 1
+  handleInteractionObjects: 1
 --- !u!114 &1002131860905314458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1017,8 +1023,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d4cc629493cbfc41bb85768b52bd807, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caveInputManager: {fileID: 7162446587287599566}
+  caveInteractionManager: {fileID: 7162446587287599566}
   minimumDistance: 40
   inputUpdateWait: 0.1
   directionThreshold: 0.9
-  tapTimeThreshold: 0.01
+  tapTimeThreshold: 0.6
